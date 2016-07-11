@@ -1,0 +1,26 @@
+---
+classes:
+  - php
+  - phpsqlsrv
+
+php::globals::php_version: '7.0'
+php::ensure: present
+
+php::dev: true
+php::fpm: true
+
+php::composer: true
+php::pear: false
+php::phpunit: false
+
+php::extensions:
+  'bz2': {}
+  'curl': {}
+  'gd': {}
+  'gettext': {}
+  'mcrypt': {}
+  'odbc': {}
+  'sqlite': {}
+  'pdo': {}
+  'xmlrpc': {}
+  'xsl': {}

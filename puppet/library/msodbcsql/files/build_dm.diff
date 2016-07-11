@@ -1,0 +1,31 @@
+--- build_dm.sh.orig	2016-07-11 19:41:14.408588172 +0000
++++ build_dm.sh	2016-07-11 19:42:08.780536161 +0000
+@@ -318,11 +318,7 @@
+         exit 1
+     fi
+ 
+-    more ./WARNING
+-
+-    echo
+-    read -p "Enter 'YES' to have this script continue: " accept
+-    echo
++    accept="YES"
+ 
+     if [ "$accept" == "YES" ]; then
+         log "Warning accepted"
+@@ -385,12 +381,6 @@
+     exit 1
+ fi
+ 
+-echo "Build of the $dm_name complete."
+-echo
+-echo "Run the command 'cd $tmp/$dm_dir; make install' to install the driver manager."
+-echo
+-echo "PLEASE NOTE THAT THIS WILL POTENTIALLY INSTALL THE NEW DRIVER MANAGER OVER ANY"
+-echo "EXISTING UNIXODBC DRIVER MANAGER.  IF YOU HAVE ANOTHER COPY OF UNIXODBC INSTALLED,"
+-echo "THIS MAY POTENTIALLY OVERWRITE THAT COPY."
++(cd $tmp/$dm_dir; make install)
+ 
+-exit 0
+\ No newline at end of file
++exit 0

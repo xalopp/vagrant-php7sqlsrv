@@ -1,0 +1,12 @@
+forge "http://forge.puppetlabs.com"
+
+mod 'puppetlabs/stdlib'
+mod 'puppetlabs/inifile'
+mod 'puppetlabs/vcsrepo'
+
+mod 'puppetlabs/apt'
+mod 'puppetlabs/concat'
+mod 'puppetlabs/apache'
+
+mod 'mayflower/php',
+    :git => 'https://github.com/mayflower/puppet-php.git'

@@ -18,7 +18,7 @@ class msodbcsql (
 
     exec { "download ${msodbc_pkg_name}" :
         cwd     => '/tmp',
-        command => "/usr/bin/wget https://download.microsoft.com/download/2/E/5/2E58F097-805C-4AB8-9FC6-71288AB4409D/${$msodbc_pkg_name}",
+        command => "/usr/bin/wget https://download.microsoft.com/download/2/E/5/2E58F097-805C-4AB8-9FC6-71288AB4409D/${msodbc_pkg_name}",
         creates => "/tmp/${msodbc_pkg_name}",
     } ->
     exec { 'untar msodbcsql package' :
@@ -37,12 +37,12 @@ class msodbcsql (
     } ->
     exec { 'build unixODBC' :
         cwd     => $build_dir,
-        command => "${$build_dir}/build_dm.sh",
+        command => "${build_dir}/build_dm.sh",
         creates => '/usr/bin/odbc_config',
     } ->
     exec { 'install msodbcsql' :
         cwd     => $build_dir,
-        command => "${$build_dir}/install.sh install --force --accept-license",
+        command => "${build_dir}/install.sh install --force --accept-license",
         creates => '/usr/bin/sqlcmd',
         require => Package['g++-5', 'libssl1.0.0', 'libgss3'],
     }

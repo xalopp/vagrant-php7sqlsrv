@@ -22,18 +22,18 @@ vagrant up --provision
 SSH to the vagrant box with `vagrant ssh`
 
 The execute in your box following commands:
-`
+```
 git clone https://github.com/doctrine/dbal.git
 cd dbal
 cp /vagrant/config/doctrine-dbal/sqlsrv.travis.xml.dist tests/travis/sqlsrv.travis.xml
 composer udpate
-`
+```
 
 You should edit the file `tests/travis/sqlsrv.travis.xml` before you run the test.
 
-`
+```
 ./vendor/bin/phpunit --configuration tests/travis/sqlsrv.travis.xml
-`
+```
 
 # License
 

@@ -5,10 +5,14 @@ class phpsqlsrv(
     $extension_name = 'sqlsrv.so'
     $extension_file = "${extension_dir}/${extension_name}"
 
+    $repo_dir = '/tmp/pecl-sqlsrv'
+    $lc_osname = downcase($::operatingsystem)
+    $os_rel    = regsubst($::operatingsystemrelease, '^(\d+)\.(\d+)$','\1\2')
+
     class { 'msodbcsql' :
         use_unixodbc_packages => true
     } ->
-    vcsrepo { '/tmp/pecl-sqlsrv':
+    vcsrepo { $repo_dir:
         ensure   => latest,
         provider => git,
         source   => 'https://github.com/Azure/msphpsql/',
@@ -16,9 +20,12 @@ class phpsqlsrv(
         user     => 'root',
         require  => Class['php'],
     } ->
-    exec { 'sqlsrv pecl extension':
-        command => "/bin/cp /tmp/pecl-sqlsrv/Ubuntu1604/php_sqlsrv_7_ts.so ${$extension_file}",
-        creates => $extension_file,
+    file { $extension_file :
+        ensure  => present,
+        source => "${repo_dir}/binaries/${lc_osname}${os_rel}_binaries/php_sqlsrv_7_nts.so",
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
     } ->
     file { '/etc/php/7.0/mods-available/sqlsrv.ini':
         ensure  => present,

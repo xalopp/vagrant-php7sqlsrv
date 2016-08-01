@@ -7,7 +7,7 @@ class phpsqlsrv(
 
     $repo_dir = '/tmp/pecl-sqlsrv'
     $lc_osname = downcase($::operatingsystem)
-    $os_rel    = regsubst($::operatingsystemrelease, '^(\d+)\.(\d+)$','\1\2')
+    $os_rel    = regsubst($::operatingsystemrelease, '^(\d+)\.(\d+)$','\1')
 
     class { 'msodbcsql' :
         use_unixodbc_packages => true
@@ -22,7 +22,7 @@ class phpsqlsrv(
     } ->
     file { $extension_file :
         ensure  => present,
-        source => "${repo_dir}/binaries/${lc_osname}${os_rel}_binaries/php_sqlsrv_7_nts.so",
+        source => "${repo_dir}/binaries/${::operatingsystem}${os_rel}/php_sqlsrv_7_nts.so",
         owner   => 'root',
         group   => 'root',
         mode    => '0644',

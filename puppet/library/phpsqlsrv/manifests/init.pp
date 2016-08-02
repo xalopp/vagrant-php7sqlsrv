@@ -34,7 +34,7 @@ class phpsqlsrv(
         group   => 'root',
         mode    => '0644',
     } ->
-    exec { 'enabel extension':
+    exec { 'enable extension':
         command => '/usr/sbin/phpenmod sqlsrv',
         creates => '/etc/php/7.0/cli/conf.d/20-sqlsrv.ini',
     }

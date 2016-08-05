@@ -1,6 +1,6 @@
 class msodbcsql (
     $msodbc_version = '13.0.0.0',
-    $use_unixodbc_packages = true
+    $use_unixodbc_packages = false
 ) {
     $msodbc_pkg_name = "msodbcsql-${msodbc_version}.tar.gz"
 

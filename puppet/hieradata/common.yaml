@@ -13,6 +13,10 @@ php::composer: true
 php::pear: false
 php::phpunit: false
 
+# variables_order requires E to be set, otherwiese getenv() won't work in make test
+php::settings:
+  'PHP/variables_order': 'EGPCS'
+
 php::extensions:
   'bz2': {}
   'curl': {}

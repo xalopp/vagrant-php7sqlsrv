@@ -2,6 +2,7 @@
 classes:
   - php
   - phpsqlsrv
+  - mssqltestenv
 
 php::globals::php_version: '7.0'
 php::ensure: present

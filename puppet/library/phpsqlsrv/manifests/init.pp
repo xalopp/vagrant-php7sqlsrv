@@ -18,7 +18,7 @@ class phpsqlsrv() {
         user     => 'root',
         require  => Class['php'],
     } ->
-    package { ['g++-5', 'libssl1.0.0', 'libgss3']:
+    package { ['g++', 'libssl1.0.0', 'libgss3']:
         ensure => present
     } ->
     exec { 'install msodbcsql':

@@ -12,11 +12,30 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "ubuntu/xenial64"
-  config.vm.provider :virtualbox do |vb|
-    vb.name   = 'mydaysphp7'
-    vb.memory = 1024
-    vb.cpus   = 2
+
+  # Ubuntu 16.04
+  config.vm.define "xenial" do |xenial|
+    xenial.vm.box = "ubuntu/xenial64"
+    xenial.vm.provider :virtualbox do |vb|
+      vb.name   = 'xenial'
+      vb.memory = 1024
+      vb.cpus   = 2
+    end
+    xenial.vm.network "private_network", ip: "192.168.56.10"
+    config.vm.provision "shell", inline: <<-SHELL
+      sudo perl -pi -e 's/^(127.0.0.1 localhost)$/$1 ubuntu-xenial/' /etc/hosts
+    SHELL
+  end
+
+  # Debian 8.5
+  config.vm.define "jessie", autostart: false do |jessie|
+    jessie.vm.box = "debian/contrib-jessie64"
+    jessie.vm.provider :virtualbox do |vb|
+      vb.name   = 'jessie'
+      vb.memory = 1024
+      vb.cpus   = 2
+    end
+    jessie.vm.network "private_network", ip: "192.168.56.11"
   end
 
   if !Vagrant.has_plugin?('vagrant-vbguest')
@@ -44,10 +63,6 @@ Vagrant.configure(2) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # config.vm.network "forwarded_port", guest: 80, host: 8080
-
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.56.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -91,10 +106,10 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
-    sudo perl -pi -e 's/^(127.0.0.1 localhost)$/$1 ubuntu-xenial/' /etc/hosts
     sudo apt-get update
-    sudo apt-get install -y puppet
-    sudo apt-get install -y r10k
+    git version > /dev/null 2>&1 || sudo apt-get install -y git
+    puppet --version > /dev/null 2>&1 || sudo apt-get install -y puppet
+    r10k version > /dev/null 2>&1 || sudo apt-get install -y r10k
     (cd /vagrant/puppet; r10k puppetfile install)
   SHELL
 

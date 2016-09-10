@@ -1,0 +1,8 @@
+---
+classes:
+  - php::repo
+
+php::params::manage_repos: true
+php::repo::debian::release: 'jessie'
+
+phpsqlsrv::use_source: true

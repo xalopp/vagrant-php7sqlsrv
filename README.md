@@ -1,7 +1,11 @@
 # Vagrant Box installing PHP7 with Microsoft SQLSRV PECL extension for testing
 
-This package will provide you a ready to run Ubuntu 16.04 virtual machine preinstalled
+This package will provide you a ready to run virtual machine preinstalled
 with [PHP7](http://php.net) and [Microsoft Drivers for PHP for SQL Server](https://github.com/Azure/msphpsql).
+
+Currently, following operating systems are supported:
+* Ubuntu 16.04 `xenial` 64 bit
+* Debian 8.5 `jessie` 64 bit
 
 # Prerequisites
 * [VirtualBox](https://www.virtualbox.org/)
@@ -20,12 +24,23 @@ Clone the project from github, change to the subdirectory and launch vagrant.
 ```
 git clone https://github.com/xalopp/vagrant-php7sqlsrv.git
 cd vagrant-php7sqlsrv
-vagrant up --provision
+vagrant up xenial --provision 
 ```
+
+This will launch a Ubuntu `xenial` box.
+
+## Debian support
+
+To start a Debian `jessie` box, simply replaces `xenial` by `jessie` in the commands.
+I might be necessary to re-provison the box with
+```
+vagrant provision jessie --provision-with puppet
+```
+if some puppet errors are shown.
 
 ## Testing Doctrine DBAL
 
-SSH to the vagrant box with `vagrant ssh`
+SSH to the vagrant box with `vagrant ssh xenial`
 
 The execute in your box following commands:
 ```

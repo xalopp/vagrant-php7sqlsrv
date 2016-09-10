@@ -5,4 +5,6 @@
     :datadir:  /vagrant/puppet/hieradata/
 
 :hierarchy:
+    - "%{::operatingsystem}"
     - common
+    - local

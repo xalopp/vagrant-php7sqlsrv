@@ -1,4 +1,6 @@
-class phpsqlsrv() {
+class phpsqlsrv(
+    $use_source = false
+) {
     $extension_dir = '/usr/lib/php/20151012'
     $extension_suffix = 'so'
     $extension_name = 'sqlsrv'
@@ -7,7 +9,11 @@ class phpsqlsrv() {
     $pdo_extension_file = "${extension_dir}/${pdo_extension_name}.${extension_suffix}"
 
     $repo_dir = '/tmp/pecl-sqlsrv'
-    $lc_osname = downcase($::operatingsystem)
+    if ($::operatingsystem == 'Debian') {
+        $lc_osname = 'ubuntu'
+    } else {
+        $lc_osname = downcase($::operatingsystem)
+    }
     $os_rel    = regsubst($::operatingsystemrelease, '^(\d+)\.(\d+)$','\1')
 
     vcsrepo { $repo_dir:
@@ -26,9 +32,24 @@ class phpsqlsrv() {
         creates => '/opt/microsoft/msodbcsql/lib64/libmsodbcsql-13.0.so.0.0',
     }
 
+    if ($use_source == true) {
+        $sqlsrv_so = "${repo_dir}/source/sqlsrv/modules/sqlsrv.so"
+        $pdo_sqlsrv_so = "${repo_dir}/source/pdo_sqlsrv/modules/pdo_sqlsrv.so"
+
+    } else {
+        $sqlsrv_so = "${repo_dir}/binaries/${::operatingsystem}${os_rel}/php_${extension_name}_7_nts.${extension_suffix}"
+        $pdo_sqlsrv_so = "${repo_dir}/binaries/${::operatingsystem}${os_rel}/php_${pdo_extension_name}_7_nts.${extension_suffix}"
+    }
+
+    exec { 'build sqlsrv':
+        cwd     => "${repo_dir}/source/sqlsrv",
+        command => '/usr/bin/phpize && ./configure CXXFLAGS=-std=c++11 && /usr/bin/make',
+        creates => $sqlsrv_so,
+        require => [Vcsrepo[$repo_dir], Exec['install msodbcsql']],
+    } ->
     file { $extension_file :
         ensure  => present,
-        source  => "${repo_dir}/binaries/${::operatingsystem}${os_rel}/php_${extension_name}_7_nts.${extension_suffix}",
+        source  => $sqlsrv_so,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
@@ -46,9 +67,15 @@ class phpsqlsrv() {
         creates => "/etc/php/7.0/cli/conf.d/20-${extension_name}.ini",
     }
 
+    exec { 'build pdo_sqlsrv':
+        cwd     => "${repo_dir}/source/pdo_sqlsrv",
+        command => '/usr/bin/phpize && ./configure CXXFLAGS=-std=c++11 && /usr/bin/make',
+        creates => $pdo_sqlsrv_so,
+        require => [Vcsrepo[$repo_dir], Exec['install msodbcsql']],
+    } ->
     file { $pdo_extension_file :
         ensure  => present,
-        source  => "${repo_dir}/binaries/${::operatingsystem}${os_rel}/php_${pdo_extension_name}_7_nts.${extension_suffix}",
+        source  => $pdo_sqlsrv_so,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
